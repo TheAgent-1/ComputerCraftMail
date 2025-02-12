@@ -75,7 +75,7 @@ function sendMailScreen()
     read()
 end
 
--- View Inbox
+-- View Inbox with Delete Option
 function viewInbox()
     term.clear()
     term.setCursorPos(1,1)
@@ -95,11 +95,19 @@ function viewInbox()
                 print("  " .. textutils.formatTime(msg.timestamp, true) .. " - " .. msg.content)
                 print("")
             end
+            write("Enter email number to delete (or press Enter to go back): ")
+            local choice = read()
+            local index = tonumber(choice)
+            if index and mails[index] then
+                local deleteData = {action = "delete", email = userEmail, index = index}
+                rednet.send(serverID, textutils.serialize(deleteData), "mail")
+                print("Email deleted! Press Enter to return.")
+                read()
+            end
         end
     else
         print("Failed to connect to the mail server.")
     end
-
     print("\nPress Enter to return.")
     read()
 end
