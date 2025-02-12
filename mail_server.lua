@@ -39,6 +39,24 @@ local function getMail(username)
     return mail
 end
 
+local function deleteMail(username, index)
+    local filepath = fs.combine(mailDir, username .. ".txt")
+    if not fs.exists(filepath) then return false end
+
+    local file = fs.open(filepath, "r")
+    local mail = textutils.unserialize(file.readAll()) or {}
+    file.close()
+
+    if mail[index] then
+        table.remove(mail, index)
+        local file = fs.open(filepath, "w")
+        file.write(textutils.serialize(mail))
+        file.close()
+        return true
+    end
+    return false
+end
+
 local modem = peripheral.find("modem", function(_, modem) return modem.isWireless() end)
 if modem then
     rednet.open(peripheral.getName(modem))
@@ -63,6 +81,13 @@ while true do
             rednet.send(senderID, textutils.serialize(mail), "mail_response")
         else
             rednet.send(senderID, "Invalid email!", "mail_response")
+        end
+    elseif data and data.action == "delete" then
+        local username = extractUsername(data.email)
+        if username and deleteMail(username, data.index) then
+            rednet.send(senderID, "Mail deleted!", "mail_response")
+        else
+            rednet.send(senderID, "Invalid request!", "mail_response")
         end
     end
 end
