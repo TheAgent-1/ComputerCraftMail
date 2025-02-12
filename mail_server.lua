@@ -1,0 +1,68 @@
+local mailDir = "mailbox"
+
+if not fs.exists(mailDir) then
+    fs.makeDir(mailDir)
+end
+
+local function extractUsername(email)
+    return email:match("^(%w+)@spectre%.local$")
+end
+
+local function saveMail(to, from, message)
+    local username = extractUsername(to)
+    if not username then return end
+
+    local filepath = fs.combine(mailDir, username .. ".txt")
+    local mail = {}
+
+    if fs.exists(filepath) then
+        local file = fs.open(filepath, "r")
+        mail = textutils.unserialize(file.readAll()) or {}
+        file.close()
+    end
+
+    table.insert(mail, {timestamp = os.time(), from = from, content = message})
+
+    local file = fs.open(filepath, "w")
+    file.write(textutils.serialize(mail))
+    file.close()
+end
+
+local function getMail(username)
+    local filepath = fs.combine(mailDir, username .. ".txt")
+    if not fs.exists(filepath) then return {} end
+
+    local file = fs.open(filepath, "r")
+    local mail = textutils.unserialize(file.readAll()) or {}
+    file.close()
+    
+    return mail
+end
+
+local modem = peripheral.find("modem", function(_, modem) return modem.isWireless() end)
+if modem then
+    rednet.open(peripheral.getName(modem))
+else
+    print("No wireless modem found!")
+    return
+end
+
+print("Mail Server Online")
+
+while true do
+    local senderID, message = rednet.receive("mail")
+    local data = textutils.unserialize(message)
+
+    if data and data.action == "send" then
+        saveMail(data.to, data.from, data.content)
+        rednet.send(senderID, "Mail sent!", "mail_response")
+    elseif data and data.action == "view" then
+        local username = extractUsername(data.email)
+        if username then
+            local mail = getMail(username)
+            rednet.send(senderID, textutils.serialize(mail), "mail_response")
+        else
+            rednet.send(senderID, "Invalid email!", "mail_response")
+        end
+    end
+end
