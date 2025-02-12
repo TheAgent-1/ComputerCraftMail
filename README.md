@@ -1,6 +1,6 @@
 # ComputerCraftMail
 
-ComputerCraftMail is a Minecraft mod that allows players to send local emails within the game using the ComputerCraft mod. This project provides a simple and efficient way to communicate with other players in your Minecraft world.
+ComputerCraftMail is a custom program for the Minecraft mod ComputerCraft that allows players to send local emails within the game using the ComputerCraft mod. This project provides a simple and efficient way to communicate with other players in your Minecraft world.
 
 ## Features
 
