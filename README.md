@@ -30,7 +30,6 @@ To install ComputerCraftMail, follow these steps:
    - For the server: `mail_server`
    - For the client: `mail_client`
 
-4. Restart your Minecraft server to load the scripts.
 
 ### Changing the Domain
 
