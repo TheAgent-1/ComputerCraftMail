@@ -6,7 +6,7 @@ ComputerCraftMail is a Minecraft mod that allows players to send local emails wi
 
 - **Server and Client Scripts**: Easily set up your email system with dedicated server and client scripts.
 - **Local Email System**: Send and receive messages between players in your Minecraft world.
-- **User -Friendly Interface**: Simple commands to send and check emails.
+- **User-Friendly Interface**: Simple commands to send and check emails.
 
 ## Installation
 
@@ -15,14 +15,14 @@ To install ComputerCraftMail, follow these steps:
 1. Ensure you have the ComputerCraft mod installed in your Minecraft environment.
 2. Use the following commands to download the server and client scripts directly from GitHub:
 
-   For the server-side:
-   ```lua
-   wget https://raw.githubusercontent.com/YourUsername/ComputerCraftMail/main/mail_server.lua
+   For the server side:
+   ```bash
+   wget https://raw.githubusercontent.com/TheAgent-1/ComputerCraftMail/main/mail_server.lua
    ```
 
    For the client-side:
-   ```lua
-   wget https://raw.githubusercontent.com/YourUsername/ComputerCraftMail/main/mail_client.lua
+   ```bash
+   wget https://raw.githubusercontent.com/TheAgent-1/ComputerCraftMail/main/mail_client.lua
    ```
 
 3. To run the scripts, simply type the following commands in your ComputerCraft computer:
@@ -38,7 +38,7 @@ If you want to change the email domain (e.g., from `spectre.local` to something 
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/YourUsername/ComputerCraftMail.git
+   git clone https://github.com/TheAgent-1/ComputerCraftMail.git
    ```
 
 2. Open the `mail_client.lua` file and locate the line that defines the domain:
@@ -83,20 +83,3 @@ Contributions are welcome! If you would like to contribute to ComputerCraftMail,
 3. Make your changes and commit them.
 4. Push your changes to your forked repository.
 5. Submit a pull request.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
-
-## Contact
-
-For questions or support, please reach out to [Your Name] at [Your Email Address].
-
-## Acknowledgments
-
-- Thanks to the ComputerCraft community for their support and inspiration.
-- Special thanks to [any other contributors or resources you want to acknowledge].
-
-```
-
-Feel free to replace `YourUsername`, `Your Name`, and `Your Email Address` with your actual GitHub username, name, and email address. If you have any more changes or additional information to include, just let me know!
