@@ -29,9 +29,8 @@ while true do
 end
 
 -- Discover Server ID
-table.insert(textutils.unserializeKeys, "mail")
 rednet.broadcast("DISCOVER_MAIL_SERVER", "mail")
-local senderID = rednet.receive("mail_response", 5)
+local senderID, response = rednet.receive("mail_response", 5)
 if senderID then
     serverID = senderID
 else
@@ -92,11 +91,13 @@ function viewInbox()
 
     local data = {action = "view", email = userEmail}
     rednet.send(serverID, textutils.serialize(data), "mail")
-    
+
     local _, response = rednet.receive("mail_response", 5)
     if response then
-        local mails = textutils.unserialize(response)
-        if #mails == 0 then
+        local success, mails = pcall(textutils.unserialize, response)
+        if not success or type(mails) ~= "table" then
+            print("Error: Could not retrieve emails.")
+        elseif #mails == 0 then
             print("Inbox is empty.")
         else
             for i, msg in ipairs(mails) do

@@ -70,26 +70,31 @@ print("Mail Server Online. Server ID: " .. serverID)
 
 while true do
     local senderID, message = rednet.receive("mail")
-    local data = textutils.unserialize(message)
-
-    if data then
-        if data.action == "send" then
-            saveMail(data.to, data.from, data.content)
-            rednet.send(senderID, "Mail sent!", "mail_response")
-        elseif data.action == "view" then
-            local username = extractUsername(data.email)
-            if username then
-                local mail = getMail(username)
-                rednet.send(senderID, textutils.serialize(mail), "mail_response")
-            else
-                rednet.send(senderID, "Invalid email!", "mail_response")
-            end
-        elseif data.action == "delete" then
-            local username = extractUsername(data.email)
-            if username and deleteMail(username, data.index) then
-                rednet.send(senderID, "Mail deleted!", "mail_response")
-            else
-                rednet.send(senderID, "Invalid request!", "mail_response")
+    
+    -- Check if message is valid
+    if message then
+        local success, data = pcall(textutils.unserialize, message)
+        if not success or type(data) ~= "table" then
+            rednet.send(senderID, "Error: Invalid data format!", "mail_response")
+        else
+            if data.action == "send" then
+                saveMail(data.to, data.from, data.content)
+                rednet.send(senderID, "Mail sent!", "mail_response")
+            elseif data.action == "view" then
+                local username = extractUsername(data.email)
+                if username then
+                    local mail = getMail(username)
+                    rednet.send(senderID, textutils.serialize(mail), "mail_response")
+                else
+                    rednet.send(senderID, "Invalid email!", "mail_response")
+                end
+            elseif data.action == "delete" then
+                local username = extractUsername(data.email)
+                if username and deleteMail(username, data.index) then
+                    rednet.send(senderID, "Mail deleted!", "mail_response")
+                else
+                    rednet.send(senderID, "Invalid request!", "mail_response")
+                end
             end
         end
     end
