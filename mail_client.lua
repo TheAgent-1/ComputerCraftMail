@@ -1,5 +1,3 @@
-local serverID = 1 -- Set the correct mail server ID
-
 local modem = peripheral.find("modem", function(_, modem) return modem.isWireless() end)
 if modem then
     rednet.open(peripheral.getName(modem))
@@ -28,6 +26,17 @@ while true do
         print("Invalid email format! Press Enter to retry.")
         read()
     end
+end
+
+-- Discover Server ID
+table.insert(textutils.unserializeKeys, "mail")
+rednet.broadcast("DISCOVER_MAIL_SERVER", "mail")
+local senderID = rednet.receive("mail_response", 5)
+if senderID then
+    serverID = senderID
+else
+    print("Failed to locate mail server.")
+    return
 end
 
 -- Menu System
@@ -94,15 +103,6 @@ function viewInbox()
                 print("[" .. i .. "] From: " .. msg.from)
                 print("  " .. textutils.formatTime(msg.timestamp, true) .. " - " .. msg.content)
                 print("")
-            end
-            write("Enter email number to delete (or press Enter to go back): ")
-            local choice = read()
-            local index = tonumber(choice)
-            if index and mails[index] then
-                local deleteData = {action = "delete", email = userEmail, index = index}
-                rednet.send(serverID, textutils.serialize(deleteData), "mail")
-                print("Email deleted! Press Enter to return.")
-                read()
             end
         end
     else
